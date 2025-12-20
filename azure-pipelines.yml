@@ -20,3 +20,8 @@ stages:
               backendAzureRmStorageAccountName: 'test42022'
               backendAzureRmContainerName: 'bawla-container'
               backendAzureRmKey: 'terraform.tfstate'
+
+          - task: TerraformTask@5
+            inputs:
+              provider: 'azurerm'
+              command: 'validate'

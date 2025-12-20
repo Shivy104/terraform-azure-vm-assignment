@@ -13,6 +13,7 @@ stages:
               terraformVersion: 'latest'
 
           - task: TerraformTask@5
+            displayName: terraformInit
             inputs:
               provider: 'azurerm'
               command: 'init'
@@ -22,6 +23,13 @@ stages:
               backendAzureRmKey: 'terraform.tfstate'
 
           - task: TerraformTask@5
+            displayName: terraformValidate
             inputs:
               provider: 'azurerm'
               command: 'validate'
+
+          - task: TerraformTask@5
+            inputs:
+              provider: 'azurerm'
+              command: 'plan'
+              environmentServiceNameAzureRM: 'rumuitserviceconnection'

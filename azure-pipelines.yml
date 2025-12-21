@@ -3,57 +3,57 @@ trigger: none
 pool: Latest-Pool
 
 stages:
-  - stage: InstallAndInit
-    displayName: Install And Init
-    jobs:
-      - job: InstallAndInit
-        displayName: Install And Init Job
-        steps:
+#   - stage: InstallAndInit
+#     displayName: Install And Init
+#     jobs:
+#       - job: InstallAndInit
+#         displayName: Install And Init Job
+#         steps:
           
-          - task: TerraformTask@5
+#           - task: TerraformTask@5
    
-            inputs:
-              provider: 'azurerm'
-              command: 'init'
-              backendServiceArm: 'rumuitserviceconnection'
-              backendAzureRmStorageAccountName: 'test42022'
-              backendAzureRmContainerName: 'bawla-container'
-              backendAzureRmKey: 'terraform.tfstate'
+#             inputs:
+#               provider: 'azurerm'
+#               command: 'init'
+#               backendServiceArm: 'rumuitserviceconnection'
+#               backendAzureRmStorageAccountName: 'test42022'
+#               backendAzureRmContainerName: 'bawla-container'
+#               backendAzureRmKey: 'terraform.tfstate'
 
 
-  - stage: Plan
-    displayName: Plan Stage
-    jobs:
-      - job: InitAndPlanJob
-        steps:
+#   - stage: Plan
+#     displayName: Plan Stage
+#     jobs:
+#       - job: InitAndPlanJob
+#         steps:
           
-          - task: TerraformTask@5
-            inputs:
-              provider: 'azurerm'
-              command: 'init'
-              backendServiceArm: 'rumuitserviceconnection'
-              backendAzureRmStorageAccountName: 'test42022'
-              backendAzureRmContainerName: 'bawla-container'
-              backendAzureRmKey: 'terraform.tfstate'
+#           - task: TerraformTask@5
+#             inputs:
+#               provider: 'azurerm'
+#               command: 'init'
+#               backendServiceArm: 'rumuitserviceconnection'
+#               backendAzureRmStorageAccountName: 'test42022'
+#               backendAzureRmContainerName: 'bawla-container'
+#               backendAzureRmKey: 'terraform.tfstate'
 
-          - task: TerraformTask@5
-            inputs:
-              provider: 'azurerm'
-              command: 'plan'
-              environmentServiceNameAzureRM: 'rumuitserviceconnection'
+#           - task: TerraformTask@5
+#             inputs:
+#               provider: 'azurerm'
+#               command: 'plan'
+#               environmentServiceNameAzureRM: 'rumuitserviceconnection'
 
 
-  - stage: Linting    
-    displayName: Linting Stage
-    jobs:
-      - job: LintingJob
-        steps:
+  # - stage: Linting    
+  #   displayName: Linting Stage
+  #   jobs:
+  #     - job: LintingJob
+  #       steps:
           
-          - task: PowerShell@2
-            continueOnError: true
-            inputs:
-              targetType: 'inline'
-              script: 'tflint.exe --chdir=$(System.DefaultWorkingDirectory)'
+  #         - task: PowerShell@2
+  #           continueOnError: true
+  #           inputs:
+  #             targetType: 'inline'
+  #             script: 'tflint.exe --chdir=$(System.DefaultWorkingDirectory)'
 
 
 

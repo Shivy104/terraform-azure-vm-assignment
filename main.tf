@@ -1,47 +1,46 @@
 module "rg" {
-  source   = "./modules/rg"
-  resource_group_names = var.resource_group_names
+  source    = "./modules/rg"
+  rg_config = var.rg_config
 }
 
-# module "vnet" {
-#   source              = "./modules/vnet"
-#   name                = var.vnet_name
-#   location            = var.location
-#   resource_group_name = var.rg_name
+module "vnet" {
+  source      = "./modules/vnet"
+  vnet_config = var.vnet_config
+  depends_on  = [module.rg]
+}
 
-#   depends_on = [module.rg]
-# }
+module "subnet" {
+  source        = "./modules/subnet"
+  subnet_config = var.subnet_config
+  depends_on    = [module.vnet]
+}
 
-# module "subnet" {
-#   source               = "./modules/subnet"
-#   name                 = var.subnet_name
-#   resource_group_name  = var.rg_name
-#   virtual_network_name = var.vnet_name
+module "pip" {
+  source    = "./modules/pip"
+  ip_config = var.ip_config
+  depends_on = [module.rg]
+}
 
-#   depends_on = [module.vnet]
-# }
+module "nic" {
+  source     = "./modules/nic"
+  nic_config = var.nic_config
+  depends_on = [module.subnet, module.pip]
+}
 
+module "nsg" {
+  source     = "./modules/nsg"
+  nsg_config = var.nsg_config
+  depends_on = [module.rg]
+}
 
+module "nsg_association" {
+  source          = "./modules/azurerm_network_security_group_association"
+  nsg_nic_config  = var.nsg_nic_config
+  depends_on      = [module.nic, module.nsg]
+}
 
-# module "nsg" {
-#   source              = "./modules/nsg"
-#   name                = "nsg-assignment"
-#   location            = var.location
-#   resource_group_name = var.rg_name
-
-#   depends_on = [module.rg]
-# }
-
-# module "vm" {
-#   source              = "./modules/vm"
-#   name                = var.vm_name
-#   location            = var.location
-#   resource_group_name = var.rg_name
-#   subnet_name         = var.subnet_name
-#   vnet_name           = var.vnet_name
-
-#   depends_on = [
-#     module.subnet,
-#     module.nsg
-#   ]
-# }
+module "vm" {
+  source     = "./modules/vm"
+  vm_config = var.vm_config
+  depends_on = [module.nic]
+}

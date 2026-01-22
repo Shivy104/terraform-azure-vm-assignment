@@ -1,2 +1,0 @@
-variable "ip_config" {
-}

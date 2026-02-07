@@ -113,3 +113,32 @@ module "aks" {
   aks = var.aks
   
 }
+
+module "lbassoc" {
+  depends_on = [ module.rg , module.lb , module.nic]
+  source = "../modules/azurerm_lb_associate"
+  lbassoc = var.lbassoc
+  
+}
+
+
+module "vmss" {
+  depends_on = [ module.rg , module.subnet ]
+  source = "../modules/azurerm_vmss"
+  vmss = var.vmss
+  
+}
+
+module "ag" {
+  depends_on = [ module.rg , module.subnet , module.pip]
+  source = "../modules/azurerm_ag"
+  appgateway = var.appgateway
+  
+}
+
+module "agassoc" {
+  source = "../modules/azurerm_agassociate"
+  depends_on = [ module.nic, module.ag]
+  agassoc = var.agassoc
+  
+}

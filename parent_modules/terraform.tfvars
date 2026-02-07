@@ -28,6 +28,21 @@ subnet_config = {
     virtual_network_name = "dev-vnet"
     address_prefixes     = ["10.0.2.0/24"]
   }
+
+  "vmss-subnet" = {
+    subnet_name          = "vmss-Subnet"
+    resource_group_name  = "rg-shivam"
+    virtual_network_name = "dev-vnet"
+    address_prefixes     = ["10.0.3.0/24"]
+  }
+
+  "ag-subnet" = {
+    subnet_name          = "ag-Subnet"
+    resource_group_name  = "rg-shivam"
+    virtual_network_name = "dev-vnet"
+    address_prefixes     = ["10.0.4.0/24"]
+  }
+
   
 }
 
@@ -41,6 +56,13 @@ ip_config = {
 
     "pip2" = {
     public_ip_name        = "bastionpip"
+    resource_group_name   = "rg-shivam"
+    resource_group_location             = "East US"
+    allocation_method   = "Static"
+  }
+
+      "pip3" = {
+    public_ip_name        = "agpip"
     resource_group_name   = "rg-shivam"
     resource_group_location             = "East US"
     allocation_method   = "Static"
@@ -170,7 +192,7 @@ vm_config = {
 
 kv = {
   kv1 = {
-    kv_name = "shivam-kv420"
+    kv_name = "shivam-kv4200420"
     location = "East US"
     resource_group_name = "rg-shivam"
   }
@@ -179,7 +201,7 @@ kv = {
 
 kvs = {
   kvs1 = {
-    kv_name = "shivam-kv420"
+    kv_name = "shivam-kv4200420"
     resource_group_name = "rg-shivam"
     secret_name = "shhhhhh-admin1"
     secret_value = "admin-12"
@@ -187,7 +209,7 @@ kvs = {
   }
 
   kvs2 = {
-       kv_name = "shivam-kv420"
+       kv_name = "shivam-kv4200420"
     resource_group_name = "rg-shivam"
     secret_name = "shhhhhh-password1"
     secret_value = "Password@123"
@@ -323,3 +345,148 @@ aks = {
     ]
   }
 }
+
+
+lbassoc = {
+  # lbassoc1 = {
+    # ip_configuration_name = "internal"
+    # nic_name = "nic11"
+    # resource_group_name = "rg-shivam"
+    # lb_name = "lb420"
+    # bap_name = "bap420"
+  # }
+  lbassoc2 = {
+    ip_configuration_name = "internal"
+    nic_name = "nic22"
+    resource_group_name = "rg-shivam"
+    lb_name = "lb420"
+    bap_name = "bap420"
+  }
+
+}
+
+vmss = {
+  vmss1 = {
+    name = "vmss420"
+    subnet_name = "vmss-Subnet"
+    virtual_network_name = "dev-vnet"
+    resource_group_name = "rg-shivam"
+    location = "East US"
+    sku = "Standard_F2"
+    instances = 2
+    admin_username = "adminuser"
+    password = "Password@123"
+    disable_password_authentication = false
+    source_image_reference = [
+      {
+           publisher = "Canonical"
+           offer     = "0001-com-ubuntu-server-jammy"
+           sku       = "22_04-lts"
+           version   = "latest"
+      }
+    ]
+    os_disk = [
+      {
+            storage_account_type = "Standard_LRS"
+            caching              = "ReadWrite"
+      }
+    ]
+    network_interface = [
+      {
+        name    = "vmssnic420"
+        primary = true
+        ip_configuration = [
+          {
+             name      = "internal"
+             primary   = true
+          }
+        ]
+      }
+      
+    ]
+    
+  }
+}
+
+appgateway = {
+  ag1 = {
+    subnet_name = "ag-Subnet"
+        virtual_network_name = "dev-vnet"
+        pip_name = "agpip"
+      name = "ag420"
+      resource_group_name = "rg-shivam"
+      location = "East US"
+      sku = [
+        {
+            name     = "Standard_v2"
+            tier     = "Standard_v2"
+            capacity = 2
+        }
+      ]
+      gateway_ip_configuration = [
+        {
+             name      = "my-gateway-ip-configuration"
+        }
+      ]
+
+      frontend_port = [
+        {
+              name = "frontendport420"
+              port = 80
+        }
+      ]
+
+      frontend_ip_configuration = [
+        {
+          name = "feic420"
+        }
+      ]
+      
+      backend_address_pool = [
+        {
+          name = "agbap420"
+        }
+      ]
+
+      backend_http_settings = [
+        {
+              name = "backendhttpsettings420"
+              cookie_based_affinity = "Disabled"
+              path                  = "/path1/"
+              port                  = 80
+              protocol              = "Http"
+              request_timeout       = 60
+        }
+      ]
+      http_listener = [
+        {
+              name                           = "aghttplistner420"
+              frontend_ip_configuration_name = "feic420"
+              frontend_port_name             = "frontendport420"
+              protocol                       = "Http"
+        }
+      ]
+
+      request_routing_rule = [
+        {
+              name                       = "requestroutingrule420"
+              priority                   = 9
+              rule_type                  = "Basic"
+              http_listener_name         = "aghttplistner420"
+              backend_address_pool_name  = "agbap420"
+              backend_http_settings_name = "backendhttpsettings420"
+        }
+      ]
+        }
+  }
+
+
+agassoc = {
+  agassoc1 = {
+    ip_configuration_name = "internal"
+    nic_name = "nic11"
+    resource_group_name = "rg-shivam"
+    application_gateway_name = "ag420"
+  }
+}
+

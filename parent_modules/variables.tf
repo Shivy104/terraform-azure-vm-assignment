@@ -68,3 +68,19 @@ variable "acr1" {
 variable "aks" {
   
 }
+
+variable "lbassoc" {
+  
+}
+
+variable "vmss" {
+  
+}
+
+variable "appgateway" {
+  
+}
+
+variable "agassoc" {
+  
+}
